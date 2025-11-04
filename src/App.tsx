@@ -10,6 +10,8 @@ import ServiceDetail from './components/ServiceDetail';
 import CursorTrail from './components/CursorTrail';
 import QuickEnquiryPopup from './components/QuickEnquiryPopup';
 import './animations.css';
+import cypLogo from "./assets/cypLogo.svg";
+import cypLogoDark from "./assets/cypLogoDark.svg";
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
@@ -106,7 +108,7 @@ function App() {
             >
               <div className="relative logo-container">
                 <img 
-                  src={scrolled ? "src/assets/cypLogoDark.svg" : "/src/assets/cypLogo.svg"} 
+                  src={scrolled ? cypLogoDark : cypLogo} 
                   alt="Craft Your Platform" 
                   className="w-16 h-16 object-contain transition-opacity duration-300 group-hover:opacity-80"
                 />
@@ -212,7 +214,7 @@ function App() {
               <div className="flex items-center space-x-2 mb-4 group cursor-pointer">
                 <div className="relative">
                   <img 
-                    src="src/assets/cypLogoDark.svg" 
+                    src={cypLogoDark} 
                     alt="Craft Your Platform" 
                     className="w-14 h-14 object-contain transition-opacity duration-300 group-hover:opacity-80"
                   />
