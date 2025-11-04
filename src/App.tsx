@@ -106,7 +106,7 @@ function App() {
             >
               <div className="relative logo-container">
                 <img 
-                  src={scrolled ? "/images/cypLogoDark.svg" : "/images/cypLogo.svg"} 
+                  src={scrolled ? "src/assets/cypLogoDark.svg" : "/src/assets/cypLogo.svg"} 
                   alt="Craft Your Platform" 
                   className="w-16 h-16 object-contain transition-opacity duration-300 group-hover:opacity-80"
                 />
@@ -212,7 +212,7 @@ function App() {
               <div className="flex items-center space-x-2 mb-4 group cursor-pointer">
                 <div className="relative">
                   <img 
-                    src="/images/cypLogoDark.svg" 
+                    src="src/assets/cypLogoDark.svg" 
                     alt="Craft Your Platform" 
                     className="w-14 h-14 object-contain transition-opacity duration-300 group-hover:opacity-80"
                   />
