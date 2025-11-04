@@ -31,8 +31,8 @@ export default function Contact() {
     {
       icon: Mail,
       title: 'Email Us',
-      details: 'craftyourplatform4@gmail.com',
-      subdetails: 'craftyourplatform4@gmail.com',
+      details: 'craftyourplatform@gmail.com',
+      subdetails: 'craftyourplatform@gmail.com',
     },
     {
       icon: Phone,

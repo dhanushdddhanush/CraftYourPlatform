@@ -368,7 +368,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       <section
         id="why-choose"
         ref={(el) => (sectionRefs.current['why-choose'] = el)}
-        className="relative pt-16 pb-0 overflow-hidden texture-grid"
+        className="relative pt-16 pb-10 overflow-hidden texture-grid"
       >
         <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-blue-900/20 to-gray-900 texture-dots"></div>
         <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-blue-500 rounded-full blur-3xl opacity-10 animate-pulse-slow"></div>
@@ -456,13 +456,13 @@ export default function HomePage({ onNavigate }: HomePageProps) {
           </div>
 
           {/* Call to Action */}
-          <div className={`text-center transition-all duration-1000 delay-600 ${isVisible('why-choose') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <div className={`text-center transition-all duration-1000 delay-600 mb-16 ${isVisible('why-choose') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             <div className="bg-gradient-to-r from-blue-600/20 to-cyan-600/20 backdrop-blur-sm border border-blue-500/30 rounded-2xl p-12 max-w-4xl mx-auto">
               <h3 className="text-3xl md:text-4xl font-bold text-white mb-6">
                 Ready to Build Your Platform?
               </h3>
               <p className="text-xl text-gray-300 mb-8 leading-relaxed">
-                Let\'s bring your business online beautifully — with speed, style, and results.
+                Let's bring your business online beautifully — with speed, style, and results.
               </p>
               <button
                 onClick={() => onNavigate('contact')}

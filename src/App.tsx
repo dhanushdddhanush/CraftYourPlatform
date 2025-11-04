@@ -161,7 +161,7 @@ function App() {
 
       {/* WhatsApp Floating Button */}
       <a
-        href="https://wa.me/7989679464"
+        href="https://wa.me/7989679464?text=Hello!%20%F0%9F%98%8A%20Want%20a%20stunning%20website%20for%20your%20business?%20Share%20your%20requirements%20and%20we'll%20get%20back%20with%20a%20free%20quote!"
         target="_blank"
         rel="noopener noreferrer"
         className="fixed bottom-24 right-6 z-40 w-14 h-14 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-full shadow-2xl hover:shadow-green-500/50 flex items-center justify-center transition-all duration-300 hover:scale-110 group"
@@ -233,7 +233,7 @@ function App() {
               </div>
             </div>
 
-            <div style={{ marginLeft: '50px' }}>
+            <div className="md:ml-[50px]">
               <h4 className="font-semibold mb-4 text-white">Quick Links</h4>
               <div className="space-y-2">
                 {[
@@ -260,16 +260,15 @@ function App() {
                 <button onClick={() => navigateTo('services')} className="hover:text-blue-400 hover:translate-x-1 transition-all duration-300 cursor-pointer block text-left">E-commerce Solutions</button>
                 <button onClick={() => navigateTo('seo')} className="hover:text-blue-400 hover:translate-x-1 transition-all duration-300 cursor-pointer block text-left">SEO Optimization</button>
                 <button onClick={() => navigateTo('services')} className="hover:text-blue-400 hover:translate-x-1 transition-all duration-300 cursor-pointer block text-left">Branding & Design</button>
-                <button onClick={() => navigateTo('services')} className="hover:text-blue-400 hover:translate-x-1 transition-all duration-300 cursor-pointer block text-left">Maintenance & Support</button>
               </div>
             </div>
 
             <div>
               <h4 className="font-semibold mb-4 text-white">Contact</h4>
               <div className="space-y-3 text-sm text-gray-400">
-                <a href="mailto:craftyourplatform4@gmail.com" className="flex items-center space-x-2 hover:text-blue-400 transition-colors duration-300 group">
+                <a href="mailto:craftyourplatform@gmail.com" className="flex items-center space-x-2 hover:text-blue-400 transition-colors duration-300 group">
                   <Mail className="w-4 h-4 group-hover:scale-110 transition-transform duration-300" />
-                  <span>craftyourplatform4@gmail.com</span>
+                  <span>craftyourplatform@gmail.com</span>
                 </a>
                 <a href="tel:7989679464" className="flex items-center space-x-2 hover:text-blue-400 transition-colors duration-300 group">
                   <Phone className="w-4 h-4 group-hover:scale-110 transition-transform duration-300" />
