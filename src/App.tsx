@@ -161,7 +161,7 @@ function App() {
 
       {/* WhatsApp Floating Button */}
       <a
-        href="https://wa.me/7989679464?text=Hello!%20%F0%9F%98%8A%20Want%20a%20stunning%20website%20for%20your%20business?%20Share%20your%20requirements%20and%20we'll%20get%20back%20with%20a%20free%20quote!"
+        href="https://wa.me/7989679464?text=Hey! I want to build a professional website for my brand. Please get in touch with details."
         target="_blank"
         rel="noopener noreferrer"
         className="fixed bottom-24 right-6 z-40 w-14 h-14 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-full shadow-2xl hover:shadow-green-500/50 flex items-center justify-center transition-all duration-300 hover:scale-110 group"
