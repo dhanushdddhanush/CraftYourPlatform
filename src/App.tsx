@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Menu, X, Code, Mail, Phone, MessageSquare } from 'lucide-react';
+import { Menu, X, Mail, Phone, MessageSquare } from 'lucide-react';
 import HomePage from './components/HomePage';
 import About from './components/About';
 import Services from './components/Services';
@@ -104,13 +104,18 @@ function App() {
               onClick={() => navigateTo('home')}
               className="flex items-center space-x-2 group"
             >
-              <div className="relative">
-                <Code className={`w-8 h-8 transition-colors duration-300 ${scrolled ? 'text-blue-600' : 'text-white'} group-hover:text-blue-500`} />
+              <div className="relative logo-container">
+                <img 
+                  src={scrolled ? "/images/cypLogoDark.svg" : "/images/cypLogo.svg"} 
+                  alt="Craft Your Platform" 
+                  className="w-16 h-16 object-contain transition-opacity duration-300 group-hover:opacity-80"
+                />
                 <div className="absolute inset-0 bg-blue-500 blur-xl opacity-0 group-hover:opacity-50 transition-opacity duration-300"></div>
-              </div>
-              <span className={`text-xl font-bold transition-colors duration-300 ${scrolled ? 'text-gray-900' : 'text-white'} group-hover:text-blue-500`}>
+                <span className={`text-xl font-bold transition-colors duration-300 ${scrolled ? 'text-gray-900' : 'text-white'} group-hover:text-blue-500`} style={{ marginTop: '17px' }}>
                 Craft Your Platform
               </span>
+              </div>
+              
             </button>
 
             <div className="hidden md:flex space-x-8">
@@ -206,7 +211,11 @@ function App() {
             <div>
               <div className="flex items-center space-x-2 mb-4 group cursor-pointer">
                 <div className="relative">
-                  <Code className="w-6 h-6 text-blue-500 group-hover:text-blue-400 transition-colors duration-300" />
+                  <img 
+                    src="/images/cypLogoDark.svg" 
+                    alt="Craft Your Platform" 
+                    className="w-14 h-14 object-contain transition-opacity duration-300 group-hover:opacity-80"
+                  />
                   <div className="absolute inset-0 bg-blue-500 blur-xl opacity-0 group-hover:opacity-50 transition-opacity duration-300"></div>
                 </div>
                 <span className="text-lg font-bold group-hover:text-blue-400 transition-colors duration-300">Craft Your Platform</span>

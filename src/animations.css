@@ -134,3 +134,8 @@
   background-size: 200% 200%;
   animation: gradient 8s ease infinite;
 }
+
+.logo-container{
+  display: flex;
+  flex-direction: row;
+}
