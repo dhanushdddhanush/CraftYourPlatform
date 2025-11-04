@@ -257,7 +257,7 @@ function App() {
               <h4 className="font-semibold mb-4 text-white">Services</h4>
               <div className="space-y-2 text-sm text-gray-400">
                 <button onClick={() => navigateTo('services')} className="hover:text-blue-400 hover:translate-x-1 transition-all duration-300 cursor-pointer block text-left">Website Development</button>
-                <button onClick={() => navigateTo('services')} className="hover:text-blue-400 hover:translate-x-1 transition-all duration-300 cursor-pointer block text-left">E-commerce Solutions</button>
+                <button onClick={() => navigateTo('services')} className="hover:text-blue-400 hover:translate-x-1 transition-all duration-300 cursor-pointer block text-left">E-commerce Websites</button>
                 <button onClick={() => navigateTo('seo')} className="hover:text-blue-400 hover:translate-x-1 transition-all duration-300 cursor-pointer block text-left">SEO Optimization</button>
                 <button onClick={() => navigateTo('services')} className="hover:text-blue-400 hover:translate-x-1 transition-all duration-300 cursor-pointer block text-left">Branding & Design</button>
               </div>

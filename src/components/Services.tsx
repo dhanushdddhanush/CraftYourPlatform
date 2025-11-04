@@ -23,7 +23,7 @@ export default function Services({ onNavigate }: ServicesProps) {
     },
     {
       icon: ShoppingBag,
-      title: 'Shopify Stores',
+      title: 'Shopify Websites',
       description: 'Complete e-commerce solutions with secure payment processing, inventory management, and beautiful storefronts that convert visitors into customers.',
       features: ['Payment Integration', 'Product Management', 'Mobile Optimized', 'Analytics Dashboard'],
       color: 'from-green-500 to-emerald-500',
@@ -33,7 +33,7 @@ export default function Services({ onNavigate }: ServicesProps) {
       icon: GraduationCap,
       title: 'LMS Platforms',
       description: 'Comprehensive learning management systems with course creation, student tracking, and interactive features to deliver exceptional educational experiences.',
-      features: ['Course Builder', 'Progress Tracking', 'Video Integration', 'Certificates'],
+      features: ['Course Builder', 'Progress Tracking', 'Video Integration'],
       color: 'from-purple-500 to-pink-500',
       link: 'website-development',
     },
