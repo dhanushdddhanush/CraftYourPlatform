@@ -15,11 +15,12 @@ export default async function handler(req, res) {
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: process.env.EMAIL_USER,
+        user: process.env.EMAIL_USER, // should be craftyourplatform@gmail.com
         pass: process.env.EMAIL_PASS,
       },
     });
 
+    // --- Admin email ---
     const adminHtml = `
 <div style="font-family: Arial, sans-serif; background: #f9f9f9; padding: 20px;">
   <div style="max-width: 600px; margin: auto; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
@@ -51,6 +52,9 @@ export default async function handler(req, res) {
       html: adminHtml,
     });
 
+    console.log("✅ Admin email sent successfully");
+
+    // --- User email ---
     const userHtml = `
 <div style="font-family: Arial, sans-serif; background: #f3f4f6; padding: 20px;">
   <div style="max-width: 600px; margin: auto; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); text-align: center;">
@@ -72,6 +76,8 @@ export default async function handler(req, res) {
 </div>
     `;
 
+    console.log("📨 Attempting to send thank-you email to:", formData.email);
+
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: formData.email,
@@ -79,11 +85,10 @@ export default async function handler(req, res) {
       html: userHtml,
     });
 
+    console.log("✅ Thank-you email sent to:", formData.email);
     res.status(200).json({ success: true });
   } catch (err) {
     console.error("❌ Error sending email:", err);
     res.status(500).json({ error: "Failed to send email" });
   }
 }
-
-
