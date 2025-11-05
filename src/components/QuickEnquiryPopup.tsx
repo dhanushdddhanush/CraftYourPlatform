@@ -124,7 +124,7 @@ export default function QuickEnquiryPopup({ isOpen, onClose }: QuickEnquiryPopup
                   value={formData.phone}
                   onChange={handleChange}
                   className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all duration-300"
-                  placeholder="+1 (555) 123-4567"
+                  placeholder="+XX XXXXXXXXXX"
                 />
               </div>
 

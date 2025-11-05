@@ -67,7 +67,7 @@ export default async function handler(req, res) {
       <blockquote style="font-style: italic; background: #f9fafb; padding: 10px; border-left: 4px solid #007BFF; margin: 15px 0;">
         ${formData.message}
       </blockquote>
-      <a href="https://craftyourplatform.com" target="_blank" 
+      <a href="https://craftyourplatform.vercel.app" target="_blank" 
         style="display: inline-block; margin-top: 20px; background: #007BFF; color: white; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-weight: bold;">
         Visit Our Website
       </a>
