@@ -14,15 +14,33 @@ export default function QuickEnquiryPopup({ isOpen, onClose }: QuickEnquiryPopup
     message: '',
   });
   const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState<string>("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => {
-      setSubmitted(false);
-      setFormData({ name: '', email: '', phone: '', message: '' });
-      onClose();
-    }, 2000);
+    setStatus("Sending...");
+    try {
+      const res = await fetch("/api/sendEmail", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...formData, source: "Quick Enquiry Popup" }),
+      });
+      const result = await res.json();
+      if (!res.ok) {
+        setStatus(result?.error ? `❌ ${result.error}` : "❌ Failed to send message");
+        return;
+      }
+      setStatus("✅ Message sent successfully!");
+      setSubmitted(true);
+      setTimeout(() => {
+        setSubmitted(false);
+        setFormData({ name: '', email: '', phone: '', message: '' });
+        setStatus("");
+        onClose();
+      }, 2000);
+    } catch (err) {
+      setStatus("❌ Failed to send message");
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -133,6 +151,9 @@ export default function QuickEnquiryPopup({ isOpen, onClose }: QuickEnquiryPopup
                 <span>Send Message</span>
                 <Send className="w-5 h-5" />
               </button>
+              {status && (
+                <p className="text-center text-sm text-gray-600">{status}</p>
+              )}
             </form>
           )}
         </div>

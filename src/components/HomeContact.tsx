@@ -14,14 +14,32 @@ export default function HomeContact({ isVisible }: HomeContactProps) {
   });
   const [focusedField, setFocusedField] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState<string>('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => {
-      setSubmitted(false);
-      setFormData({ name: '', email: '', phone: '', message: '' });
-    }, 3000);
+    setStatus('Sending...');
+    try {
+      const res = await fetch('/api/sendEmail', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...formData, source: 'Home Contact Section' }),
+      });
+      const result = await res.json();
+      if (!res.ok) {
+        setStatus(result?.error ? `❌ ${result.error}` : '❌ Failed to send message');
+        return;
+      }
+      setStatus('✅ Message sent successfully!');
+      setSubmitted(true);
+      setTimeout(() => {
+        setSubmitted(false);
+        setFormData({ name: '', email: '', phone: '', message: '' });
+        setStatus('');
+      }, 3000);
+    } catch (err) {
+      setStatus('❌ Failed to send message');
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -210,10 +228,13 @@ export default function HomeContact({ isVisible }: HomeContactProps) {
                     className="group w-full px-8 py-4 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-xl font-semibold text-lg transition-all duration-300 hover:shadow-2xl hover:shadow-blue-500/50 hover:scale-105"
                   >
                     <span className="flex items-center justify-center space-x-2">
-                      <span>Send Message</span>
+                      <span>{status === 'Sending...' ? 'Sending...' : 'Send Message'}</span>
                       <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
                     </span>
                   </button>
+                  {status && (
+                    <p className="text-center text-sm text-gray-300">{status}</p>
+                  )}
                 </div>
               )}
             </form>

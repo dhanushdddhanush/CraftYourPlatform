@@ -10,14 +10,35 @@ export default function Contact() {
     service: '',
     message: '',
   });
+  const [sending, setSending] = useState(false);
+  const [status, setStatus] = useState<string>('');
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
+    setSending(true);
+    setStatus('Sending...');
+    try {
+      const res = await fetch('/api/sendEmail', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...formData, source: 'Contact Page' }),
+      });
+      const result = await res.json();
+      if (!res.ok) {
+        setStatus(result?.error ? `❌ ${result.error}` : '❌ Failed to send message');
+      } else {
+        setStatus('✅ Message sent successfully!');
+        setFormData({ name: '', email: '', phone: '', service: '', message: '' });
+      }
+    } catch (err) {
+      setStatus('❌ Failed to send message');
+    } finally {
+      setSending(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -186,11 +207,15 @@ export default function Contact() {
 
                 <button
                   type="submit"
-                  className="w-full px-8 py-4 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-lg font-semibold hover:shadow-2xl hover:shadow-blue-500/50 transition-all duration-300 hover:-translate-y-1 flex items-center justify-center space-x-2"
+                  className="w-full px-8 py-4 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-lg font-semibold hover:shadow-2xl hover:shadow-blue-500/50 transition-all duration-300 hover:-translate-y-1 flex items-center justify-center space-x-2 disabled:opacity-60"
+                  disabled={sending}
                 >
-                  <span>Send Message</span>
+                  <span>{sending ? 'Sending...' : 'Send Message'}</span>
                   <Send className="w-5 h-5" />
                 </button>
+                {status && (
+                  <p className="text-center text-sm text-gray-600 mt-2">{status}</p>
+                )}
               </form>
             </div>
 
