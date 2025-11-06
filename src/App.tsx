@@ -68,6 +68,7 @@ function App() {
     { name: 'Home', page: 'home' },
     { name: 'About', page: 'about' },
     { name: 'Services', page: 'services' },
+    { name: 'Careers', page: 'careers' },
     { name: 'Contact', page: 'contact' },
   ];
 
@@ -252,6 +253,7 @@ function App() {
                   { name: 'About', page: 'about' },
                   { name: 'Services', page: 'services' },
                   { name: 'Contact', page: 'contact' },
+                  { name: 'Careers', page: 'careers' },
                 ].map((item) => (
                   <button
                     key={item.page}
