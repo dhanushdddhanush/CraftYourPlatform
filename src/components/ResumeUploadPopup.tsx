@@ -1,231 +1,234 @@
-import { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { X, Upload, FileText, Send, CheckCircle } from 'lucide-react';
 
 interface ResumeUploadPopupProps {
   isOpen: boolean;
   onClose: () => void;
+  jobTitle?: string;
 }
 
-export default function ResumeUploadPopup({ isOpen, onClose }: ResumeUploadPopupProps) {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    position: '',
-    coverLetter: '',
-  });
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [submitted, setSubmitted] = useState(false);
+export default function ResumeUploadPopup({ isOpen, onClose, jobTitle = '' }: ResumeUploadPopupProps) {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
+  const [file, setFile] = useState<File | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    if (isOpen) {
+      setName('');
+      setEmail('');
+      setMessage(jobTitle ? `Applying for: ${jobTitle}\n\n` : '');
+      setFile(null);
+      setError(null);
+      setSuccess(null);
+    }
+  }, [isOpen, jobTitle]);
+
+  if (!isOpen) return null;
+
+  const fileToBase64 = (file: File): Promise<{ content: string; mimeType: string; fileName: string }> =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const result = reader.result as string;
+        const base64 = result.split(',')[1] ?? '';
+        resolve({ content: base64, mimeType: file.type, fileName: file.name });
+      };
+      reader.onerror = (err) => reject(err);
+      reader.readAsDataURL(file);
+    });
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedFile) {
-      alert('Please upload your resume');
-      return;
+    setSubmitting(true);
+    setError(null);
+    setSuccess(null);
+
+    try {
+      let attachment = null;
+      if (file) {
+        const converted = await fileToBase64(file);
+        attachment = converted;
+      }
+
+      const payload = {
+        name,
+        email,
+        message,
+        jobTitle,
+        attachment, // may be null
+      };
+
+      const res = await fetch('/api/sendEmail', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || 'Failed to send');
+      }
+
+      setSuccess('Application sent successfully.');
+      setTimeout(() => {
+        onClose();
+      }, 1200);
+    } catch (err: any) {
+      setError(err.message || 'Submission failed');
+    } finally {
+      setSubmitting(false);
     }
-    setSubmitted(true);
-    setTimeout(() => {
-      setSubmitted(false);
-      setFormData({ name: '', email: '', phone: '', position: '', coverLetter: '' });
-      setSelectedFile(null);
-      onClose();
-    }, 2000);
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  // Handle text inputs and textarea
+  const handleFieldChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    if (name === 'name') setName(value);
+    else if (name === 'email') setEmail(value);
+    else if (name === 'message') {
+      // Preserve jobTitle prefix if present
+      if (jobTitle && value.startsWith(`Applying for: ${jobTitle}`) ) {
+        setMessage(value);
+      } else if (jobTitle) {
+        setMessage(`Applying for: ${jobTitle}\n\n${value}`);
+      } else {
+        setMessage(value);
+      }
+    }
   };
 
+  // Handle file input change (narrow to HTMLInputElement to access files)
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setSelectedFile(e.target.files[0]);
-    }
+    const input = e.target as HTMLInputElement;
+    const picked = input.files?.[0] ?? null;
+    setFile(picked);
   };
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      setSelectedFile(e.dataTransfer.files[0]);
-    }
+    const file = e.dataTransfer.files?.[0] ?? null;
+    setFile(file);
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in-up">
-      <div className="relative bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors duration-200 z-10"
-          aria-label="Close"
-        >
-          <X className="w-5 h-5 text-gray-600" />
-        </button>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 p-4">
+      <div className="bg-white rounded-xl max-w-lg w-full p-6">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-semibold">Send Resume {jobTitle ? `— ${jobTitle}` : ''}</h3>
+          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+            <X className="w-5 h-5" />
+          </button>
+        </div>
 
-        <div className="p-6">
-          <div className="flex items-center space-x-3 mb-6">
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center">
-              <FileText className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900">Send Resume</h2>
-              <p className="text-sm text-gray-500">Apply for a position</p>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="text-sm font-medium">Name</label>
+            <input
+              required
+              value={name}
+              onChange={handleFieldChange}
+              className="mt-1 block w-full border rounded-md p-2"
+              name="name"
+            />
+          </div>
+
+          <div>
+            <label className="text-sm font-medium">Email</label>
+            <input
+              type="email"
+              required
+              value={email}
+              onChange={handleFieldChange}
+              className="mt-1 block w-full border rounded-md p-2"
+              name="email"
+            />
+          </div>
+
+          <div>
+            <label className="text-sm font-medium">Message</label>
+            <textarea
+              value={message}
+              onChange={handleFieldChange}
+              rows={4}
+              className="mt-1 block w-full border rounded-md p-2"
+              name="message"
+            ></textarea>
+          </div>
+
+          <div>
+            <label className="text-sm font-medium">Resume (PDF or DOCX)</label>
+            <div
+              onDrop={handleDrop}
+              onDragOver={(e) => e.preventDefault()}
+              onClick={() => fileInputRef.current?.click()}
+              className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-all duration-300 ${
+                file
+                  ? 'border-blue-500 bg-blue-50'
+                  : 'border-gray-300 hover:border-blue-400 hover:bg-gray-50'
+              }`}
+            >
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".pdf,.doc,.docx"
+                onChange={handleFileChange}
+                className="hidden"
+                name="file"
+              />
+              {file ? (
+                <div className="space-y-2">
+                  <FileText className="w-8 h-8 text-blue-600 mx-auto" />
+                  <p className="text-sm font-medium text-gray-900">{file.name}</p>
+                  <p className="text-xs text-gray-500">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setFile(null);
+                      if (fileInputRef.current) fileInputRef.current.value = '';
+                    }}
+                    className="text-sm text-red-600 hover:text-red-700"
+                  >
+                    Remove
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  <Upload className="w-8 h-8 text-gray-400 mx-auto" />
+                  <p className="text-sm text-gray-600">
+                    <span className="text-blue-600 font-semibold">Click to upload</span> or drag and drop
+                  </p>
+                  <p className="text-xs text-gray-500">PDF, DOC, DOCX (max 5MB)</p>
+                </div>
+              )}
             </div>
           </div>
 
-          {submitted ? (
-            <div className="text-center py-12">
-              <div className="w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center">
-                <CheckCircle className="w-8 h-8 text-green-600" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Resume Submitted!</h3>
-              <p className="text-gray-600">We'll review your application and get back to you.</p>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label htmlFor="resume-name" className="block text-sm font-semibold text-gray-700 mb-2">
-                  Full Name *
-                </label>
-                <input
-                  type="text"
-                  id="resume-name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all duration-300"
-                  placeholder="John Doe"
-                />
-              </div>
+          {error && <div className="text-sm text-red-600">{error}</div>}
+          {success && <div className="text-sm text-green-600">{success}</div>}
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label htmlFor="resume-email" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Email *
-                  </label>
-                  <input
-                    type="email"
-                    id="resume-email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all duration-300"
-                    placeholder="your@email.com"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="resume-phone" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Phone *
-                  </label>
-                  <input
-                    type="tel"
-                    id="resume-phone"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all duration-300"
-                    placeholder="+1 (555) 123-4567"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="resume-position" className="block text-sm font-semibold text-gray-700 mb-2">
-                  Position Interested In
-                </label>
-                <input
-                  type="text"
-                  id="resume-position"
-                  name="position"
-                  value={formData.position}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all duration-300"
-                  placeholder="e.g., Frontend Developer"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="resume-file" className="block text-sm font-semibold text-gray-700 mb-2">
-                  Resume/CV * (PDF, DOC, DOCX)
-                </label>
-                <div
-                  onDrop={handleDrop}
-                  onDragOver={(e) => e.preventDefault()}
-                  onClick={() => fileInputRef.current?.click()}
-                  className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-all duration-300 ${
-                    selectedFile
-                      ? 'border-blue-500 bg-blue-50'
-                      : 'border-gray-300 hover:border-blue-400 hover:bg-gray-50'
-                  }`}
-                >
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    id="resume-file"
-                    accept=".pdf,.doc,.docx"
-                    onChange={handleFileChange}
-                    className="hidden"
-                    required
-                  />
-                  {selectedFile ? (
-                    <div className="space-y-2">
-                      <FileText className="w-8 h-8 text-blue-600 mx-auto" />
-                      <p className="text-sm font-medium text-gray-900">{selectedFile.name}</p>
-                      <p className="text-xs text-gray-500">{(selectedFile.size / 1024 / 1024).toFixed(2)} MB</p>
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedFile(null);
-                          if (fileInputRef.current) fileInputRef.current.value = '';
-                        }}
-                        className="text-sm text-red-600 hover:text-red-700"
-                      >
-                        Remove
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="space-y-2">
-                      <Upload className="w-8 h-8 text-gray-400 mx-auto" />
-                      <p className="text-sm text-gray-600">
-                        <span className="text-blue-600 font-semibold">Click to upload</span> or drag and drop
-                      </p>
-                      <p className="text-xs text-gray-500">PDF, DOC, DOCX (max 5MB)</p>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="resume-cover" className="block text-sm font-semibold text-gray-700 mb-2">
-                  Cover Letter (Optional)
-                </label>
-                <textarea
-                  id="resume-cover"
-                  name="coverLetter"
-                  value={formData.coverLetter}
-                  onChange={handleChange}
-                  rows={4}
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all duration-300 resize-none"
-                  placeholder="Tell us why you'd be a great fit..."
-                ></textarea>
-              </div>
-
-              <button
-                type="submit"
-                className="w-full px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-lg font-semibold hover:shadow-xl transition-all duration-300 flex items-center justify-center space-x-2"
-              >
-                <span>Submit Application</span>
-                <Send className="w-5 h-5" />
-              </button>
-            </form>
-          )}
-        </div>
+          <div className="flex items-center justify-between">
+            <button
+              type="submit"
+              disabled={submitting}
+              className="px-4 py-2 bg-blue-600 text-white rounded-md"
+            >
+              {submitting ? 'Sending...' : 'Send Application'}
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              className="text-sm text-gray-600"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
