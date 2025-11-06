@@ -9,12 +9,63 @@ interface CareersProps {
 export default function Careers({ onNavigate }: CareersProps) {
   const [mounted, setMounted] = useState(false);
   const [isResumePopupOpen, setIsResumePopupOpen] = useState(false);
+  const [selectedJob, setSelectedJob] = useState<string | null>(null);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  const positions: Array<any> = [];
+  const positions: Array<any> = [
+    {
+      title: 'Frontend Developer',
+      location: 'Remote',
+      type: 'Full-time',
+      experience: '0+ years',
+      description: 'Build responsive, accessible UIs with React, TypeScript and modern CSS. Collaborate with designers to ship delightful user experiences.',
+    },
+    {
+      title: 'Backend Developer',
+      location: 'Remote',
+      type: 'Full-time',
+      experience: '0+ years',
+      description: 'Design and implement robust APIs and services (Node.js/Express or similar). Focus on performance, security and scalable architectures.',
+    },
+    {
+      title: 'Database Administrator',
+      location: 'Remote',
+      type: 'Full-time',
+      experience: '0+ years',
+      description: 'Manage and optimize relational and NoSQL databases, backups, migrations and performance tuning to keep data reliable and fast.',
+    },
+    {
+      title: 'Data Analyst',
+      location: 'Remote',
+      type: 'Full-time',
+      experience: '0+ years',
+      description: 'Analyze product and usage data, build dashboards, and provide actionable insights using SQL, Python and visualization tools.',
+    },
+    {
+      title: 'WordPress Developer',
+      location: 'Remote',
+      type: 'Full-time',
+      experience: '0+ years',
+      description: 'Develop and maintain WordPress sites, custom themes and plugins, optimize for performance and ensure CMS usability for editors.',
+    },
+    {
+      title: 'SEO Specialist',
+      location: 'Remote',
+      type: 'Full-time',
+      experience: '0+ years',
+      description: 'Drive organic growth through technical SEO, content strategy, keyword research and performance monitoring.',
+    },
+    {
+      title: 'Business Analyst',
+      location: 'Remote',
+      type: 'Full-time',
+      experience: '0+ years',
+      description: 'Gather requirements, map processes, and translate business needs into clear technical specifications and prioritized roadmaps.',
+    },
+  ];
 
   const benefits = [
     {
@@ -149,7 +200,43 @@ export default function Careers({ onNavigate }: CareersProps) {
                 </button>
               </div>
             ) : (
-              <div className="space-y-6"></div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {positions.map((job, index) => (
+                  <div
+                    key={job.title}
+                    className={`bg-white rounded-2xl p-6 shadow-md border border-gray-100 transition-all ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
+                    style={{ transitionDelay: `${index * 80}ms` }}
+                  >
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <h3 className="text-xl font-bold text-gray-900 mb-1">{job.title}</h3>
+                        <p className="text-sm text-gray-500">{job.location} • {job.type} • {job.experience}</p>
+                      </div>
+                      <div className="text-right">
+                        <Briefcase className="w-6 h-6 text-blue-500" />
+                      </div>
+                    </div>
+                    <p className="text-gray-600 mt-4">{job.description}</p>
+                    <div className="mt-6 flex items-center justify-between">
+                      <button
+                        onClick={() => {
+                          setSelectedJob(job.title);
+                          setIsResumePopupOpen(true);
+                        }}
+                        className="px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-md font-semibold hover:shadow-lg transition"
+                      >
+                        Apply
+                      </button>
+                      <button
+                        onClick={() => onNavigate && onNavigate('contact')}
+                        className="text-sm text-gray-600 hover:underline"
+                      >
+                        Ask a question
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
             )}
           </div>
 
@@ -200,7 +287,14 @@ export default function Careers({ onNavigate }: CareersProps) {
       </div>
 
       {/* Resume Upload Popup */}
-      <ResumeUploadPopup isOpen={isResumePopupOpen} onClose={() => setIsResumePopupOpen(false)} />
+      <ResumeUploadPopup
+        isOpen={isResumePopupOpen}
+        onClose={() => {
+          setIsResumePopupOpen(false);
+          setSelectedJob(null);
+        }}
+        jobTitle={selectedJob ?? ''}
+      />
     </div>
   );
 }
