@@ -228,8 +228,8 @@ function App() {
               {/* Social Icons with Glow */}
               <div className="flex space-x-3">
                 {[
-                  { name: 'Twitter', icon: '𝕏', color: 'hover:bg-blue-500', href: '#' },
-                  { name: 'LinkedIn', icon: 'in', color: 'hover:bg-blue-600', href: '#' },
+                  { name: 'Twitter', icon: '𝕏', color: 'hover:bg-blue-500', href: 'https://x.com/CraftIndiaWeb?t=bJ9mtOAr6fPMXOrU9fSiEg&s=09' },
+                  { name: 'LinkedIn', icon: 'in', color: 'hover:bg-blue-600', href: 'https://www.linkedin.com/company/craft-your-platform' },
                   { name: 'Instagram', icon: 'IG', color: 'hover:bg-pink-600', href: 'https://www.instagram.com/craftyourplatform?igsh=dWN3dzcycDY5YW05' },
                   { name: 'Facebook', icon: 'f', color: 'hover:bg-blue-700', href: '#' },
                 ].map((social) => (
