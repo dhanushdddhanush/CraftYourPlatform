@@ -20,6 +20,42 @@ export default async function handler(req, res) {
       },
     });
 
+    // Prepare attachments array if attachment provided in JSON (base64)
+    const attachments = [];
+    // Accept either: attachment: { content: "<base64>", fileName: "resume.pdf", mimeType: "application/pdf" }
+    // or: attachment: "<base64 string>" with fileName and mimeType fields
+    if (formData.attachment) {
+      try {
+        let contentBase64 = null;
+        let fileName = formData.attachment.fileName || formData.attachmentName || "attachment";
+        let mimeType = formData.attachment.mimeType || formData.attachmentType || "application/octet-stream";
+
+        if (typeof formData.attachment === "string") {
+          contentBase64 = formData.attachment;
+        } else if (formData.attachment.content) {
+          contentBase64 = formData.attachment.content;
+        }
+
+        if (contentBase64) {
+          // Basic size check: decode and limit to ~8MB (adjust as needed)
+          const buffer = Buffer.from(contentBase64, "base64");
+          const maxBytes = 8 * 1024 * 1024;
+          if (buffer.length > maxBytes) {
+            return res.status(413).json({ error: "Attachment too large" });
+          }
+
+          attachments.push({
+            filename: fileName,
+            content: buffer,
+            contentType: mimeType,
+          });
+        }
+      } catch (e) {
+        console.warn("Attachment processing failed:", e);
+        // proceed without attachment
+      }
+    }
+
     // --- Admin email ---
     const adminHtml = `
 <div style="font-family: Arial, sans-serif; background: #f9f9f9; padding: 20px;">
@@ -29,6 +65,7 @@ export default async function handler(req, res) {
     </div>
     <table style="width: 100%; border-collapse: collapse;">
       ${Object.entries(formData)
+        .filter(([k]) => k !== "attachment" && k !== "attachmentName" && k !== "attachmentType")
         .map(
           ([key, value]) => `
         <tr>
@@ -50,6 +87,7 @@ export default async function handler(req, res) {
       to: "craftyourplatform@gmail.com",
       subject: `New Inquiry from ${formData.name}`,
       html: adminHtml,
+      attachments, // may be empty
     });
 
     console.log("✅ Admin email sent successfully");
