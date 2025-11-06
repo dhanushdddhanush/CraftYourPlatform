@@ -228,19 +228,23 @@ function App() {
               {/* Social Icons with Glow */}
               <div className="flex space-x-3">
                 {[
-                  { name: 'Twitter', icon: '𝕏', color: 'hover:bg-blue-500' },
-                  { name: 'LinkedIn', icon: 'in', color: 'hover:bg-blue-600' },
-                  { name: 'Instagram', icon: 'IG', color: 'hover:bg-pink-600' },
-                  { name: 'Facebook', icon: 'f', color: 'hover:bg-blue-700' },
+                  { name: 'Twitter', icon: '𝕏', color: 'hover:bg-blue-500', href: '#' },
+                  { name: 'LinkedIn', icon: 'in', color: 'hover:bg-blue-600', href: '#' },
+                  { name: 'Instagram', icon: 'IG', color: 'hover:bg-pink-600', href: 'https://www.instagram.com/craftyourplatform?igsh=dWN3dzcycDY5YW05' },
+                  { name: 'Facebook', icon: 'f', color: 'hover:bg-blue-700', href: '#' },
                 ].map((social) => (
-                  <button
+                  <a
                     key={social.name}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className={`group relative w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center text-gray-400 ${social.color} hover:text-white transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-blue-500/50`}
                     title={social.name}
+                    aria-label={`Visit our ${social.name} page`}
                   >
                     <span className="text-xs font-bold relative z-10">{social.icon}</span>
                     <div className="absolute inset-0 bg-blue-500 rounded-lg blur-md opacity-0 group-hover:opacity-30 transition-opacity duration-300"></div>
-                  </button>
+                  </a>
                 ))}
               </div>
             </div>
