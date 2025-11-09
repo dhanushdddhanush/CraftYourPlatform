@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Menu, X, Mail, Phone, MessageSquare } from 'lucide-react';
 import HomePage from './components/HomePage';
 import About from './components/About';
@@ -95,8 +96,265 @@ function App() {
     }
   };
 
+  // SEO Meta Tags Configuration
+  const baseUrl = 'https://craftyourplatform.vercel.app';
+  const siteName = 'Craft Your Platform';
+  const defaultImage = `${baseUrl}/og-image.jpg`;
+
+  const pageMeta: Record<string, {
+    title: string;
+    description: string;
+    keywords: string;
+    ogImage?: string;
+    structuredData?: object;
+  }> = {
+    home: {
+      title: 'Craft Your Platform | Professional Web Development & SEO Experts',
+      description: 'Craft Your Platform builds professional websites using React, WordPress, and Shopify — optimized for SEO and performance. Transform your digital presence with our expert web development services.',
+      keywords: 'web development, React websites, WordPress development, Shopify stores, SEO optimization, website design, digital marketing, web design services, e-commerce development, custom websites, Craft Your Platform',
+      structuredData: {
+        '@context': 'https://schema.org',
+        '@type': 'Organization',
+        name: 'Craft Your Platform',
+        url: baseUrl,
+        logo: `${baseUrl}/cypLogo.svg`,
+        description: 'Professional web development and SEO services',
+        contactPoint: {
+          '@type': 'ContactPoint',
+          telephone: '+91-7989679464',
+          contactType: 'customer service',
+          email: 'craftyourplatform@gmail.com',
+          areaServed: 'IN',
+          availableLanguage: ['English', 'Hindi'],
+        },
+        sameAs: [
+          'https://x.com/CraftIndiaWeb',
+          'https://www.linkedin.com/company/craft-your-platform',
+          'https://www.instagram.com/craftyourplatform',
+        ],
+        address: {
+          '@type': 'PostalAddress',
+          addressLocality: 'Hyderabad',
+          addressRegion: 'Telangana',
+          addressCountry: 'IN',
+        },
+      },
+    },
+    about: {
+      title: 'About Us | Craft Your Platform - Web Development & Digital Solutions',
+      description: 'Learn about Craft Your Platform — our mission, vision, and the team behind our web development and SEO success. We design, build, and launch beautiful, high-performing websites.',
+      keywords: 'about Craft Your Platform, web development company, web design team, digital agency, website developers, SEO experts, React developers, WordPress developers',
+    },
+    services: {
+      title: 'Our Services | Web Development & SEO | Craft Your Platform',
+      description: 'Explore our comprehensive web development services including website design, React development, WordPress sites, Shopify stores, SEO optimization, and digital branding to grow your online presence.',
+      keywords: 'web development services, website design, React development, WordPress development, Shopify development, SEO services, e-commerce development, custom web applications, LMS platforms',
+      structuredData: {
+        '@context': 'https://schema.org',
+        '@type': 'Service',
+        serviceType: 'Web Development and SEO Services',
+        provider: {
+          '@type': 'Organization',
+          name: 'Craft Your Platform',
+        },
+        areaServed: {
+          '@type': 'Country',
+          name: 'India',
+        },
+        hasOfferCatalog: {
+          '@type': 'OfferCatalog',
+          name: 'Web Development Services',
+          itemListElement: [
+            {
+              '@type': 'Offer',
+              itemOffered: {
+                '@type': 'Service',
+                name: 'Website Development',
+              },
+            },
+            {
+              '@type': 'Offer',
+              itemOffered: {
+                '@type': 'Service',
+                name: 'SEO Optimization',
+              },
+            },
+            {
+              '@type': 'Offer',
+              itemOffered: {
+                '@type': 'Service',
+                name: 'E-commerce Development',
+              },
+            },
+          ],
+        },
+      },
+    },
+    blogs: {
+      title: 'Blog | Web Development Insights & SEO Tips | Craft Your Platform',
+      description: 'Read our latest blog articles on web development, SEO, digital marketing, and design trends. Get expert insights and best practices to grow your online presence.',
+      keywords: 'web development blog, SEO tips, digital marketing blog, web design trends, React tutorials, WordPress guides, e-commerce tips, website optimization',
+    },
+    careers: {
+      title: 'Careers | Join Our Team | Craft Your Platform',
+      description: 'Join Craft Your Platform\'s team of passionate developers and designers. Explore exciting career opportunities in web development, SEO, and digital solutions. Remote positions available.',
+      keywords: 'web developer jobs, React developer jobs, WordPress developer careers, SEO specialist jobs, remote developer jobs, web development careers, digital marketing jobs',
+      structuredData: {
+        '@context': 'https://schema.org',
+        '@type': 'JobPosting',
+        title: 'Web Developer Positions',
+        description: 'Join our team of passionate web developers and designers',
+        identifier: {
+          '@type': 'PropertyValue',
+          name: 'Craft Your Platform',
+          value: 'CYP-CAREERS',
+        },
+        datePosted: '2025-01-01',
+        employmentType: 'FULL_TIME',
+        hiringOrganization: {
+          '@type': 'Organization',
+          name: 'Craft Your Platform',
+          sameAs: baseUrl,
+        },
+        jobLocation: {
+          '@type': 'Place',
+          address: {
+            '@type': 'PostalAddress',
+            addressLocality: 'Hyderabad',
+            addressRegion: 'Telangana',
+            addressCountry: 'IN',
+          },
+        },
+        applicantLocationRequirements: {
+          '@type': 'Country',
+          name: 'IN',
+        },
+      },
+    },
+    contact: {
+      title: 'Contact Us | Craft Your Platform - Get in Touch',
+      description: 'Get in touch with Craft Your Platform for professional website development and SEO solutions. Contact us for a free consultation on your web development project.',
+      keywords: 'contact Craft Your Platform, web development consultation, website quote, SEO consultation, get in touch, web development services contact',
+    },
+    'website-development': {
+      title: 'Website Development Services | Custom Web Solutions | Craft Your Platform',
+      description: 'Professional website development services including React, WordPress, and Shopify. Building digital experiences that drive results with custom design, responsive development, and SEO optimization.',
+      keywords: 'website development, React development, WordPress development, Shopify development, custom websites, responsive web design, web application development',
+      structuredData: {
+        '@context': 'https://schema.org',
+        '@type': 'Service',
+        serviceType: 'Website Development',
+        provider: {
+          '@type': 'Organization',
+          name: 'Craft Your Platform',
+          url: baseUrl,
+        },
+        areaServed: {
+          '@type': 'Country',
+          name: 'India',
+        },
+        description: 'Professional website development services including React, WordPress, and Shopify. Building digital experiences that drive results.',
+        offers: {
+          '@type': 'Offer',
+          priceCurrency: 'INR',
+          availability: 'https://schema.org/InStock',
+        },
+      },
+    },
+    seo: {
+      title: 'SEO & Optimization Services | Search Engine Optimization | Craft Your Platform',
+      description: 'Comprehensive SEO services to boost your rankings, increase organic traffic, and ensure your website performs at its best. Get found, get noticed, get results with our SEO expertise.',
+      keywords: 'SEO services, search engine optimization, SEO optimization, keyword research, on-page SEO, technical SEO, local SEO, SEO audit',
+      structuredData: {
+        '@context': 'https://schema.org',
+        '@type': 'Service',
+        serviceType: 'SEO & Optimization',
+        provider: {
+          '@type': 'Organization',
+          name: 'Craft Your Platform',
+          url: baseUrl,
+        },
+        areaServed: {
+          '@type': 'Country',
+          name: 'India',
+        },
+        description: 'Comprehensive SEO services to boost your rankings, increase organic traffic, and ensure your website performs at its best.',
+        offers: {
+          '@type': 'Offer',
+          priceCurrency: 'INR',
+          availability: 'https://schema.org/InStock',
+        },
+      },
+    },
+  };
+
+  const currentMeta = pageMeta[currentPage] || pageMeta.home;
+  const currentPath = pageToPath[currentPage] || '/';
+  const canonicalUrl = `${baseUrl}${currentPath}`;
+
+  // Generate structured data JSON-LD
+  const getStructuredData = () => {
+    const structuredData = currentMeta.structuredData || pageMeta.home.structuredData;
+    if (structuredData) {
+      return JSON.stringify(structuredData);
+    }
+    return null;
+  };
+
   return (
     <div className="min-h-screen bg-white">
+      {/* SEO Meta Tags */}
+      <Helmet>
+        {/* Primary Meta Tags */}
+        <title>{currentMeta.title}</title>
+        <meta name="title" content={currentMeta.title} />
+        <meta name="description" content={currentMeta.description} />
+        <meta name="keywords" content={currentMeta.keywords} />
+        <meta name="author" content="Craft Your Platform" />
+        <meta name="robots" content="index, follow" />
+        <meta name="language" content="English" />
+        <meta name="revisit-after" content="7 days" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:title" content={currentMeta.title} />
+        <meta property="og:description" content={currentMeta.description} />
+        <meta property="og:image" content={currentMeta.ogImage || defaultImage} />
+        <meta property="og:site_name" content={siteName} />
+        <meta property="og:locale" content="en_US" />
+
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:url" content={canonicalUrl} />
+        <meta name="twitter:title" content={currentMeta.title} />
+        <meta name="twitter:description" content={currentMeta.description} />
+        <meta name="twitter:image" content={currentMeta.ogImage || defaultImage} />
+        <meta name="twitter:creator" content="@CraftIndiaWeb" />
+        <meta name="twitter:site" content="@CraftIndiaWeb" />
+
+        {/* Canonical URL */}
+        <link rel="canonical" href={canonicalUrl} />
+
+        {/* Alternate Languages (if applicable) */}
+        <link rel="alternate" hrefLang="en" href={canonicalUrl} />
+
+        {/* Favicon */}
+        <link rel="icon" type="image/svg+xml" href="/cypLogo.svg" />
+
+        {/* Structured Data (JSON-LD) */}
+        {getStructuredData() && (
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: getStructuredData() || '' }} />
+        )}
+
+        {/* Additional SEO Meta Tags */}
+        <meta name="theme-color" content="#2563eb" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="format-detection" content="telephone=yes" />
+      </Helmet>
+
       {/* Custom Cursor Trail Effect */}
       <CursorTrail />
       
