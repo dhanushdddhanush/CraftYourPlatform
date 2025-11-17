@@ -121,7 +121,7 @@ function App() {
         description: 'Professional web development and SEO services',
         contactPoint: {
           '@type': 'ContactPoint',
-          telephone: '+91-7989679464',
+          telephone: '+91-7981913345',
           contactType: 'customer service',
           email: 'craftyourplatform@gmail.com',
           areaServed: 'IN',
@@ -427,7 +427,7 @@ function App() {
 
       {/* WhatsApp Floating Button */}
       <a
-        href="https://wa.me/7989679464?text=Hey! I want to build a professional website for my brand. Please get in touch with details."
+        href="https://wa.me/7981913345?text=Hey! I want to build a professional website for my brand. Please get in touch with details."
         target="_blank"
         rel="noopener noreferrer"
         className="fixed bottom-24 right-6 z-40 w-14 h-14 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-full shadow-2xl hover:shadow-green-500/50 flex items-center justify-center transition-all duration-300 hover:scale-110 group"
@@ -545,9 +545,9 @@ function App() {
                   <Mail className="w-4 h-4 group-hover:scale-110 transition-transform duration-300" />
                   <span>craftyourplatform@gmail.com</span>
                 </a>
-                <a href="tel:7989679464" className="flex items-center space-x-2 hover:text-blue-400 transition-colors duration-300 group">
+                <a href="tel:7981913345" className="flex items-center space-x-2 hover:text-blue-400 transition-colors duration-300 group">
                   <Phone className="w-4 h-4 group-hover:scale-110 transition-transform duration-300" />
-                  <span>7989679464</span>
+                  <span>7981913345</span>
                 </a>
               </div>
             </div>

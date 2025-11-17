@@ -58,7 +58,7 @@ export default function Contact() {
     {
       icon: Phone,
       title: 'Call Us',
-      details: '7989679464',
+      details: '7981913345',
       subdetails: 'Mon-Fri 9am-6pm',
     },
     {
